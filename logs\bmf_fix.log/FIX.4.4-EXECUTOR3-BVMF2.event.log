@@ -1,0 +1,5 @@
+20130830-03:24:49: Session FIX.4.4:EXECUTOR3->BVMF2 schedule is daily, 00:00:00-UTC - 23:59:00-UTC
+20130830-03:24:49: Created session: FIX.4.4:EXECUTOR3->BVMF2
+20130830-03:24:50: Initiated logon request
+20130830-03:24:51: Logon contains ResetSeqNumFlag=Y, resetting sequence numbers to 1
+20130830-03:24:51: Received logon

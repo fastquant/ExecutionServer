@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ExecutionServer>	
+	<Connections>  
+		<Connection Name="Connection2" Configuration="etc/BMF_FIX.conf" Customisation="etc/BMF_FIX_FIELDS.xml" Implementation="executionserver.fix.Fix44" Active="true"/>
+		<Connection Name="Connection1" Broker="ITAU" Configuration="etc/BOV_FIX.conf" Implementation="executionserver.fix.Fix42" Active="true"/>	
+	</Connections>
+        <MarketDefaultConnections>            
+                <Market Name="BOV_FIX" Connection="Connection1" /> 
+                <Market Name="BMF_FIX" Connection="Connection2" />				
+        </MarketDefaultConnections>
+	<Database ConnectionString="mongodb://localhost" Database="ExecutionServer" />	
+</ExecutionServer>

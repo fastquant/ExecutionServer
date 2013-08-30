@@ -1,0 +1,11 @@
+package BE;
+
+//import "google/protobuf/csharp_options.proto";
+
+//option (google.protobuf.csharp_file_options).namespace = "Google.ProtocolBuffers.BE";
+//option (google.protobuf.csharp_file_options).umbrella_classname = "ConnectRequest";
+
+message ConnectRequest {
+  required string client = 1;
+  required int32 admin = 2;
+}

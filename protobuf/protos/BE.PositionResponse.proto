@@ -1,0 +1,11 @@
+package BE;
+
+message Position {
+  required string exchange = 1;
+  required string security = 2;
+}
+
+message PositionResponse {
+	repeated Position position = 1;
+}
+

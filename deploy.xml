@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="OrderMatcher" default="all" basedir=".">
+    
+    <property name="project.dir" value="E:\sylvio\work\projects\aas\src\trunk\ExecutionServer"/>
+    
+    <echo level="info">Rebuilding project...</echo>
+    
+    <delete dir="deploy"/>
+    
+    <target name="all">
+         <ant antfile="${project.dir}\build.xml" target="clean"/>
+         <ant antfile="${project.dir}\build.xml" target="jar"/>
+    </target>
+    
+    <copy todir="deploy/dist">
+        <fileset dir="dist"/>
+    </copy>
+    
+    <copy todir="deploy">
+        <fileset dir="service"/>
+    </copy>
+    
+    <copy todir="deploy/etc">
+        <fileset dir="etc" />
+    </copy>
+    
+    <mkdir dir="deploy/log" />
+        
+    <echo level="info">Project deploy package sucessfully built.</echo>    
+    
+    <echo file="deploy/ExecutionServer.bat">java -jar dist\ExecutionServer.jar</echo> 
+    
+</project>

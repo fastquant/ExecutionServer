@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Customisation>
+	<Commands>
+		<Command Type="A">
+			<Fields>
+				<Field Number="95" Value="6" />
+				<Field Number="96" Value="PMANQE"/>
+			</Fields>
+		</Command>
+		<Command Type="D">
+			<Fields>
+				<Field Number="22" Value="8" />
+				<Field Number="59" Value="0" />
+				<Field Number="826" Value="1" />				
+			</Fields>
+                        <Groups>
+                                <Group Number="78">
+                                    <Fields>
+                                        <Field Number="79" Value="[portfolio]" />
+                                        <Field Number="80" Value="1" />                                        
+                                    </Fields>
+                                </Group>
+                                <Group Number="78">
+                                    <Fields>
+                                        <Field Number="79" Value="TESTE" />
+                                        <Field Number="80" Value="1" />                                        
+                                    </Fields>
+                                </Group>
+                                <Group Number="453">
+                                    <Fields>                                        
+                                        <Field Number="448" Value="ITAU" />
+                                        <Field Number="447" Value="D" />                                                                                   
+                                        <Field Number="452" Value="1" />
+                                    </Fields>
+                                </Group>
+                        </Groups>
+		</Command>
+		<Command Type="F">
+			<Fields>
+				<Field Number="22" Value="8" />
+			</Fields>
+		</Command>
+		<Command Type="G">
+			<Fields>
+				<Field Number="22" Value="8" />
+			</Fields>
+		</Command>
+		<Command Type="x">
+			<Fields>
+				<Field Number="263" Value="0" />		
+			</Fields>
+		</Command>
+	</Commands>
+</Customisation>

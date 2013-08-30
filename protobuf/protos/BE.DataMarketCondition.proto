@@ -1,0 +1,11 @@
+package BE;
+
+message DataMarketCondition {
+  enum MarketStatus {
+		OPEN = 0;
+		CLOSE = 1;
+		CALL = 2;
+  }
+  required string Ticker = 1;
+  required MarketStatus status = 2;
+}

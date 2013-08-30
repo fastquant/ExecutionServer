@@ -1,0 +1,84 @@
+package BE;
+
+message DataBookEntry {
+	required int64 TimeStamp = 1;
+	required double Quantity = 2;
+	required double Price = 3;
+
+	required string IdBroker = 4;
+	required int64 Position = 5;
+	
+    enum EQuoteCondition {
+       REGULAR = 1;
+       BIDASKAUTOEXEC = 2;
+       ROTATION = 3; 
+       SPECIALISTASK = 4;
+       SPECIALISTBID = 5;
+       LOCKED = 6;
+       FASTMARKET = 7; 
+       SPECIALISTBIDASK = 8;
+       ONESIDE = 9;
+       OPENINGQUOTE = 10;
+       CLOSINGQUOTE = 11;
+       MARKETMAKERCLOSED = 12; 
+       DEPTHONASK = 13;
+       DEPTHONBID = 14;
+       DEPTHONBIDASK = 15;
+       TIER3 = 16;
+       CROSSED = 17;
+       HALTED = 18;
+       OPERATIONALHALT = 19;
+       NEWSOUT = 20;
+       NEWSPENDING = 21;
+       NONFIRM = 22;
+       DUETORELATED = 23;
+       RESUME = 24;
+       NOMARKETMAKERS = 25;
+       ORDERIMBALANCE = 26;
+       ORDERINFLUX = 27;
+       INDICATED = 28;
+       PREOPEN = 29;
+       INVIEWOFCOMMON = 30;
+       RELATEDNEWSPENDING = 31;
+       RELATEDNEWSOUT = 32;
+       ADDITIONALINFO = 33;
+       RELATEDADDLINFO = 34;
+       NOOPENRESUME = 35;
+       DELETED = 36;
+       REGULATORYHALT = 37;
+       SECSUSPENSION = 38;
+       NONCOMLIANCE = 39;
+       FILINGSNOTCURRENT = 40;
+       CATS_HALTED = 41;
+       CATS = 42;
+       EXDIVORSPLIT = 43;
+       UNASSIGNED = 44;
+       INSIDEOPEN = 45;
+       INSIDECLOSED = 46;
+       OFFERWANTED = 47;
+       BIDWANTED = 48;
+       CASH = 49;
+       INACTIVE = 50;
+       NATIONALBBO = 51;
+       NOMINAL = 52;
+       CABINET = 53;
+       NOMINALCABINET = 54;
+       BLANKPRICE = 55;
+       SLOWBIDASK = 56;
+       SLOWLIST = 57;
+       SLOWBID = 58;
+       SLOWASK = 59;
+       BIDOFFERWANTED = 60;
+       SUBPENNY = 61;
+       NONBBO = 62;
+    }; // EQuoteCondition.
+
+	optional EQuoteCondition QuoteCondition = 6 [ default = REGULAR ];
+	
+}
+
+message DataBook {
+	required string Ticker = 1;
+	repeated DataBookEntry AskBook = 2;
+	repeated DataBookEntry BidBook = 3;
+}
