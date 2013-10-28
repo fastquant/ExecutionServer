@@ -1,0 +1,28 @@
+package BE;
+
+message OrderUpdate {
+	required string orderId = 1;
+	optional string marketOrderId = 2;
+	required int64 qtyRemaining = 3;
+	optional bool inMarket = 4 [default = false];
+	optional bool cancelled = 5 [default = false];
+	optional bool isVisible = 6 [default = false];
+	optional bool modifiable = 7 [default = false];
+	optional string symbol = 8;
+	optional double price = 9;
+	optional double stoppx = 10;
+	optional int32 side = 11;
+	optional int32 type = 12;
+	optional int64 quantity = 13;
+	optional bool orderChangeRejected = 14 [default = false];
+	optional bool externallyModified = 15 [default = false];
+	optional bool unknownState = 16 [default = false];
+	optional int64 qtyExecuted = 17;
+	optional int64 lastShares = 18;
+	optional double lastPrice = 19;
+	optional double avgPrice = 20;
+	required int32 status= 21;
+	optional string RejectReason = 22;
+	optional string clientId = 23;
+	optional string accountId = 24;
+}

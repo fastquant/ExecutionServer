@@ -122,7 +122,7 @@ public class ExecutionController {
     /**
      * Send all available connections (routings) to the client part.
      */
-    void sendAvailableConns() {
+    public void sendAvailableConns() {
 
         // prepare connect response object.
         BEConnectResponse.ConnectResponse.Builder response = BEConnectResponse.ConnectResponse.newBuilder();
@@ -137,7 +137,7 @@ public class ExecutionController {
     /**
      * Send a list of orders from a particular client.
      */
-    void sendOrderList() {
+    public void sendOrderList() {
 
         List<ExecutionOrder> orderList = database.findOrdersByOwner(clientName);
 

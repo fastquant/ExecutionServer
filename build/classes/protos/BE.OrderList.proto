@@ -1,0 +1,32 @@
+package BE;
+
+message DataOrder {
+	required string orderId = 1;
+	required string clientId = 2;
+	required int64 entrytime = 3;
+	required string symbol = 4;
+	optional double price = 5 [default = 0];
+	optional double stoppx = 6 [default = 0];
+	required int32 side = 7;
+	required int32 type = 8;
+	optional int64 quantity = 9 [default = 0];
+	optional int64 minqty = 10 [default = 0];
+	optional int64 openqty = 11 [default = 0];
+	required string exchange = 12;
+	required string accountId = 13;
+	required int32 validity = 14;
+	optional string date = 15;
+	optional int64 qtyExecuted = 17;
+	optional int64 qtyRemaining = 18;
+	optional double avgPrice = 19;
+	required int32 status= 20;
+	optional string RejectReason = 21;
+        optional double lastPrice = 22 [default = 0];
+        optional double lastShares = 23 [default = 0];
+        required string route = 24;
+        required string broker = 25;
+}
+
+message DataOrderList {
+	repeated DataOrder order = 1;
+}

@@ -6,6 +6,8 @@ package executionserver.controller;
 import executionserver.domain.Connection;
 import executionserver.domain.Settings;
 import executionserver.fix.FixConnection;
+import executionserver.mina.BsonHandler;
+import executionserver.mina.codecs.BsonCodecFactory;
 import executionserver.mina.codecs.ProtobufCodecFactory;
 import executionserver.mina.codecs.StringCodecFactory;
 import java.io.File;
@@ -33,6 +35,7 @@ public class ExecutionServerController implements Runnable {
     // constants
     public static final String SERVER_VERSION = "1.0";
     public static final String LOGGER_CONFIG_FILE = "log4j.properties";
+    public static final int BSON_DEFAULT_PORT = 60100;
     public static final int PROTOBUFF_DEFAULT_PORT = 60000;
     public static final int ADMIN_DEFAULT_PORT = 60777;      
     
@@ -42,9 +45,11 @@ public class ExecutionServerController implements Runnable {
     // properties    
     private boolean running;
     private Thread server;    
+    private IoAcceptor bsonAcceptor;
     private IoAcceptor protobuffAcceptor;
     private IoAcceptor adminAcceptor;
     
+    public static int bsonPort = BSON_DEFAULT_PORT;
     public static int protobuffPort = PROTOBUFF_DEFAULT_PORT;
     public static int adminPort = ADMIN_DEFAULT_PORT;    
     public static Settings settings;    
@@ -95,6 +100,21 @@ public class ExecutionServerController implements Runnable {
         protobuffAcceptor.unbindAll();
     }
 
+    public void startBsonAcceptor() throws IOException, InterruptedException {
+
+        bsonAcceptor = new SocketAcceptor();
+        bsonAcceptor.getFilterChain().addLast("logging", new LoggingFilter());
+        bsonAcceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new BsonCodecFactory()));
+
+        bsonAcceptor.bind(new InetSocketAddress(bsonPort), new BsonHandler());
+
+        System.out.println("BSON accpetor listening on port " + bsonPort);
+    }
+    
+    private void stopBsonAcceptor() {
+        bsonAcceptor.unbindAll();
+    }
+    
     private void addAndStart(Connection conn) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 
         // check if exists a connection with the same name.
@@ -158,9 +178,10 @@ public class ExecutionServerController implements Runnable {
             protobuffPort = Integer.parseInt(settings.protobuffAcceptor.port);
         }
         try {            
-            startProtobuff();
+            //startProtobuff();
 
             // Start Bson commands acceptor.
+            startBsonAcceptor();
         } 
         catch (Exception ex) {
             logger.error(ex.getMessage());
@@ -191,7 +212,9 @@ public class ExecutionServerController implements Runnable {
         
         stopFixConnections();
 
-        stopProtobuff();
+        //stopProtobuff();
+        
+        stopBsonAcceptor();
 
         stopAdmin();
 

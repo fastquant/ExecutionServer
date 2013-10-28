@@ -9,8 +9,11 @@ import executionserver.controller.ExecutionServerController;
 import executionserver.domain.ExecutionOrder;
 import executionserver.domain.OrderStatus;
 import executionserver.domain.RequestTypes;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.common.WriteFuture;
+import org.bson.BasicBSONObject;
 import org.slf4j.LoggerFactory;
 import quickfix.*;
 import quickfix.field.*;
@@ -400,9 +403,46 @@ public class Fix42 extends AbstractFixConnection {
 
             IoSession session = ExecutionServerController.clients.get(order.getOwner());
             
+            boolean isBson = session.getAttribute("Protocol").equals("BSON");
+            
             synchronized(database) {
                 try{                    
-                    WriteFuture fut = session.write(response.build());
+                    WriteFuture fut;
+                    
+                    if(isBson) {
+                        
+                        BasicBSONObject bsonOrder = new BasicBSONObject();
+                        
+                        bsonOrder.put("AccountId", response.getAccountId());
+                        bsonOrder.put("AvgPrice", response.getAvgPrice());
+                        bsonOrder.put("ClientId", response.getClientId());
+                        bsonOrder.put("LastPrice", response.getLastPrice());
+                        bsonOrder.put("LastShares", response.getLastShares());
+                        bsonOrder.put("MarketOrderId", response.getMarketOrderId());
+                        bsonOrder.put("OrderId", response.getOrderId());
+                        bsonOrder.put("Price", response.getPrice());
+                        bsonOrder.put("QtyExecuted", response.getQtyExecuted());
+                        bsonOrder.put("QtyRemaining", response.getQtyRemaining());
+                        bsonOrder.put("Qty", response.getQuantity());
+                        bsonOrder.put("RejectReason", response.getRejectReason());
+                        bsonOrder.put("Side", response.getSide());
+                        bsonOrder.put("Status", response.getStatus());
+                        bsonOrder.put("StopPrice", response.getStoppx());
+                        bsonOrder.put("Symbol", response.getSymbol());
+                        bsonOrder.put("Type", response.getType());
+                        
+                        Map<String, Object> args = new HashMap<String, Object>();
+                        args.put("Order", bsonOrder);
+                        
+                        BasicBSONObject orderUpdate = new BasicBSONObject();                        
+                        orderUpdate.put("Handler", "OrderUpdate");
+                        orderUpdate.put("Args", args);
+                        
+                        fut = session.write(orderUpdate);                        
+                    }
+                    else {                    
+                        fut = session.write(response.build());                                                
+                    }
                         
                     fut.join();
                     

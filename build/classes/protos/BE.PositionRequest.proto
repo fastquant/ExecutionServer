@@ -1,0 +1,7 @@
+package BE;
+
+message PositionRequest {
+  required string client = 1;
+  optional string exchange = 2;
+  optional string security = 3;
+}

@@ -1,0 +1,15 @@
+package BE;
+
+import "google/protobuf/csharp_options.proto";
+
+option (google.protobuf.csharp_file_options).namespace = "Google.ProtocolBuffers.BE";
+option (google.protobuf.csharp_file_options).umbrella_classname = "ConnectResponse";
+
+message Exchange {
+	required string Name = 1;
+	repeated string Account = 2;
+}
+
+message ConnectResponse {
+	repeated Exchange Exch = 1;
+}

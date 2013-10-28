@@ -50,6 +50,7 @@ public class ProtobufHandler extends IoHandlerAdapter{
             ExecutionController execCtr = new ExecutionController(clientName, session);
             
             session.setAttribute("ExecutionController", execCtr);
+            session.setAttribute("Protocol", "Protobuff");
             
             ExecutionServerController.clients.put(clientName, session);            
             

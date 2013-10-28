@@ -8,8 +8,11 @@ import executionserver.controller.ExecutionServerController;
 import executionserver.domain.ExecutionOrder;
 import executionserver.domain.OrderStatus;
 import executionserver.domain.RequestTypes;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.common.WriteFuture;
+import org.bson.BasicBSONObject;
 import org.slf4j.LoggerFactory;
 import quickfix.*;
 import quickfix.Message;
@@ -518,11 +521,47 @@ public class Fix44BMF extends AbstractFixConnection {
             }
 
             IoSession session = ExecutionServerController.clients.get(order.getOwner());
+            
+            boolean isBson = session.getAttribute("Protocol").equals("BSON");
 
             synchronized(database) {
                 try{                    
-                    WriteFuture fut = session.write(response.build());
+                    WriteFuture fut;
+                    
+                    if(isBson) {
                         
+                        BasicBSONObject bsonOrder = new BasicBSONObject();
+                        
+                        bsonOrder.put("AccountId", response.getAccountId());
+                        bsonOrder.put("AvgPrice", response.getAvgPrice());
+                        bsonOrder.put("ClientId", response.getClientId());
+                        bsonOrder.put("LastPrice", response.getLastPrice());
+                        bsonOrder.put("LastShares", response.getLastShares());
+                        bsonOrder.put("MarketOrderId", response.getMarketOrderId());
+                        bsonOrder.put("OrderId", response.getOrderId());
+                        bsonOrder.put("Price", response.getPrice());
+                        bsonOrder.put("QtyExecuted", response.getQtyExecuted());
+                        bsonOrder.put("QtyRemaining", response.getQtyRemaining());
+                        bsonOrder.put("Qty", response.getQuantity());
+                        bsonOrder.put("RejectReason", response.getRejectReason());
+                        bsonOrder.put("Side", response.getSide());
+                        bsonOrder.put("Status", response.getStatus());
+                        bsonOrder.put("StopPrice", response.getStoppx());
+                        bsonOrder.put("Symbol", response.getSymbol());
+                        bsonOrder.put("Type", response.getType());
+                        
+                        Map<String, Object> args = new HashMap<String, Object>();
+                        args.put("Order", bsonOrder);
+                        
+                        BasicBSONObject orderUpdate = new BasicBSONObject();                        
+                        orderUpdate.put("Handler", "OrderUpdate");
+                        
+                        fut = session.write(orderUpdate);                        
+                    }
+                    else {                    
+                        fut = session.write(response.build());                                                
+                    }
+                    
                     fut.join();
                     
                     if(fut.isWritten()) {                             
@@ -532,7 +571,8 @@ public class Fix44BMF extends AbstractFixConnection {
                         database.markProblem(order);
                     }
                 }
-                catch(Exception e) {                    
+                catch(Exception e) {         
+                    
                     database.markProblem(order);                    
                     logger.error("Order Id: " + order.getClientId() + " could not be send back to client.");
                 }
@@ -561,18 +601,43 @@ public class Fix44BMF extends AbstractFixConnection {
 
     private void rejectRequest(ExecutionOrder order) {
         
-        BEOrderUpdate.OrderUpdate.Builder response = BEOrderUpdate.OrderUpdate.newBuilder();
-        
-        response.setOrderId(order.getId());        
-        response.setQtyRemaining(0);
-        response.setSymbol(order.getSecurity());
-        response.setSide(order.getSide());
-        response.setClientId(order.getClientId());
-        response.setAccountId(order.getAccount());
-        response.setRejectReason("[ExecutionServer] Order is not in market.");
-        response.setStatus(OrderStatus.REJECTED);
-
         IoSession session = ExecutionServerController.clients.get(order.getOwner());
-        session.write(response.build());
+        
+        boolean isBson = session.getAttribute("Protocol").equals("BSON");
+        
+        if(isBson) {
+            BasicBSONObject bsonOrder = new BasicBSONObject();
+
+            bsonOrder.put("OrderId", order.getId());
+            bsonOrder.put("QtyRemaining", 0);            
+            bsonOrder.put("Symbol", order.getSecurity());
+            bsonOrder.put("Side", order.getSide());
+            bsonOrder.put("ClientId", order.getClientId());
+            bsonOrder.put("AccountId", order.getAccount());
+            bsonOrder.put("RejectReason", "[ExecutionServer] Order is not in market.");
+            bsonOrder.put("Status", OrderStatus.REJECTED);
+            
+            Map<String, Object> args = new HashMap<String, Object>();
+            args.put("Order", bsonOrder);
+
+            BasicBSONObject orderUpdate = new BasicBSONObject();                        
+            orderUpdate.put("Handler", "OrderUpdate");
+
+            session.write(orderUpdate);
+        }
+        else {        
+            BEOrderUpdate.OrderUpdate.Builder response = BEOrderUpdate.OrderUpdate.newBuilder();
+
+            response.setOrderId(order.getId());        
+            response.setQtyRemaining(0);
+            response.setSymbol(order.getSecurity());
+            response.setSide(order.getSide());
+            response.setClientId(order.getClientId());
+            response.setAccountId(order.getAccount());
+            response.setRejectReason("[ExecutionServer] Order is not in market.");
+            response.setStatus(OrderStatus.REJECTED);
+            
+            session.write(response.build());
+        }
     }
 }

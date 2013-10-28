@@ -1,0 +1,16 @@
+package BE;
+
+message DataTrade {
+	required string orderId = 1;
+	required string tradeId = 2;
+	required int64 entrytime = 3;
+	required string exchange = 4;
+	required string symbol = 5;
+	required int32 side = 6;
+	required double price = 7;
+	required int64 quantity = 8;
+}
+
+message DataTradeList {
+	repeated DataTrade trade = 1;
+}

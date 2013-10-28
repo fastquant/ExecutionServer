@@ -1,0 +1,12 @@
+package BE;
+
+message DataRequest {
+  enum EInformation {
+		TRADE = 0;
+		BOOK = 1;
+		MARKET_STATUS = 2;
+  }
+  required string Ticker = 1;
+  required EInformation information = 2;
+  optional int32 depth = 3 [ default = 5 ];
+}
